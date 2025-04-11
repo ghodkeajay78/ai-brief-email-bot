@@ -35,4 +35,22 @@ def get_ai_brief():
         ],
         temperature=0.7
     )
-    return response.choices[0
+    return response.choices[0].message.content
+
+def send_email(content):
+    msg = MIMEMultipart()
+    msg['From'] = EMAIL
+    msg['To'] = TO_EMAIL
+    msg['Subject'] = f"The AI Brief — {datetime.now().strftime('%b %d')}"
+
+    body = MIMEText(content, 'plain')
+    msg.attach(body)
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+        server.login(EMAIL, EMAIL_PASSWORD)
+        server.sendmail(EMAIL, TO_EMAIL, msg.as_string())
+
+if __name__ == "__main__":
+    content = get_ai_brief()
+    send_email(content)
+    print("✅ The AI Brief sent!")
