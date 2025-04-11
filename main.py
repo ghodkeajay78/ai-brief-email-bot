@@ -16,29 +16,21 @@ TO_EMAIL = os.getenv("TO_EMAIL")
 def generate_prompt():
     today = datetime.now().strftime('%B %d, %Y')
     return f"""
-You are The AI Brief — a highly visual, developer-focused daily AI newsletter generator.
+You are The AI Brief, an HTML newsletter for developers covering real AI news, model releases, tools, research, and trends.
 
-Create a complete HTML email for {today} with:
-✅ Full HTML layout — clean, readable, email-safe HTML
-✅ Inline CSS (no external styles)
-✅ Start with a full-width AI-themed banner image at the top
-✅ Section headers with emojis/icons (🔥 🧠 🧪 🧵 📬)
-✅ Up to 6 sections:
-  1. 🔥 Trending story (summary, why it matters, and image)
-  2. 🧠 New AI model/tool #1 — what it does, why it’s useful for devs, how it compares, demo or link
-  3. 🛠️ New tool #2 or updated feature
-  4. 🧪 Research highlight (plus potential impact)
-  5. 🧵 What developers are building (cool GitHub project or creative usage)
-  6. 📬 Quick bites (5-8 short items: funding, launches, partnerships)
+Write today's AI Brief for {today} in full HTML format (no markdown, no placeholder text, no lorem ipsum). It should:
 
-Use elements like:
-- `<style>` tag for basic typography, background, container style
-- `<div>`, `<h2>`, `<p>`, `<ul>` for layout
-- `<img src="..." style="width:100%;">` for images
-- Clear spacing and section separation
+- 🧠 Include at least 4 *real or plausible* stories relevant to developers
+- 🔥 Include 1 viral/trending AI news story with context and a real or plausible link
+- 🛠 Highlight 2–3 AI tools or models (name, use case, capability, demo or GitHub link)
+- 🧪 Include 1 research paper or capability with a brief summary and how it can be used
+- 🧵 Share 1 cool thing developers are building with AI (e.g., open source project or unique use)
+- 📬 End with 2–3 short news bites and a subscription link (Google Form)
+- Include section headers using `<h2>` and style it like a modern, readable newsletter
+- Use light background, readable fonts, and clean layout with emojis for each section
 
-Tone: Dev-smart, engaging, not overly formal — feels like a clean Substack issue.
-Only return valid HTML. Do NOT include triple quotes, markdown, or code blocks.
+Start with a full-width AI-themed banner image at the top (link to Unsplash or similar).
+Return only clean, usable HTML — no markdown, no lorem ipsum, no filler.
 """
 
 def get_ai_brief():
@@ -48,7 +40,7 @@ def get_ai_brief():
         messages=[
             {"role": "user", "content": generate_prompt()}
         ],
-        temperature=0.7
+        temperature=0.5
     )
     return response.choices[0].message.content
 
