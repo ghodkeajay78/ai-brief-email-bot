@@ -29,7 +29,7 @@ Write today's AI Brief for {today} in full HTML format (no markdown, no placehol
 - Include section headers using `<h2>` and style it like a modern, readable newsletter
 - Use light background, readable fonts, and clean layout with emojis for each section
 
-Start with a full-width AI-themed banner image at the top (link to Unsplash or similar).
+Use a clean light background color (#f7f9fc). Add a small banner image at the top (unsplash or similar, <100KB) using <img>, not background-image.
 Return only clean, usable HTML — no markdown, no lorem ipsum, no filler.
 """
 
