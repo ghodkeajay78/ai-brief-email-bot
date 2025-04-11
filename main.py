@@ -41,7 +41,7 @@ def send_email(content):
     msg = MIMEMultipart()
     msg['From'] = EMAIL
     msg['To'] = TO_EMAIL
-    msg['Subject'] = f"The AI Brief — {datetime.now().strftime('%b %d')}"
+    msg['Subject'] = f"The AI Brief — {datetime.now().strftime('%b %d')} (🧠 curated for you)"
 
     body = MIMEText(content, 'plain')
     msg.attach(body)
