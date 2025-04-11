@@ -16,14 +16,22 @@ TO_EMAIL = os.getenv("TO_EMAIL")
 def generate_prompt():
     today = datetime.now().strftime('%B %d, %Y')
     return f"""
-Act as The AI Brief, a newsletter-style AI news summarizer.
-Generate today’s AI Brief in Twitter thread format for {today}.
-Include:
-- 1 viral or trending story at the top with context and link
-- 2-3 impactful model/tool releases with what they do, why it matters, and links
-- 1 recent research paper or capability
-- 2-3 short company news bites at the bottom
-Make it insightful and engaging for AI developers.
+Act as The AI Brief, a newsletter-style AI digest for developers.
+
+Create today's AI Brief for {today} in HTML format (not Markdown, not plaintext).
+Include clear sections with:
+1. A trending topic (headline, summary, link)
+2. 2-3 major AI model/tool releases (what it does, why it matters, link)
+3. A research highlight (paper, summary, impact, link)
+4. 2-3 short news bites (bullet points, with links)
+
+Format it with:
+- ✅ HTML structure (no CSS file, just inline styles)
+- ✅ Section headers using `<h2>` or bold tags
+- ✅ Bullet points or boxed sections using `<ul>`, `<div>`, or emojis
+- ✅ Optional small AI-related image URLs (if helpful or symbolic)
+
+Tone: professional, clear, dev-focused — but visually appealing like a mini newsletter.
 """
 
 def get_ai_brief():
@@ -38,12 +46,13 @@ def get_ai_brief():
     return response.choices[0].message.content
 
 def send_email(content):
-    msg = MIMEMultipart()
+    msg = MIMEMultipart("alternative")
     msg['From'] = EMAIL
     msg['To'] = TO_EMAIL
-    msg['Subject'] = f"The AI Brief — {datetime.now().strftime('%b %d')} (🧠 curated for you)"
+    msg['Subject'] = f"The AI Brief — {datetime.now().strftime('%b %d')}"
 
-    body = MIMEText(content, 'plain')
+    # Attach as HTML
+    body = MIMEText(content, 'html')
     msg.attach(body)
 
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
