@@ -1,5 +1,4 @@
 name: Daily AI Brief Email
-
 on:
   schedule:
     - cron: '0 3 * * *'  # Runs daily at 3:00 UTC (9:00 IST)
