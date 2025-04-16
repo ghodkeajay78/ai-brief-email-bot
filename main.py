@@ -17,7 +17,7 @@ TO_EMAIL = os.getenv("TO_EMAIL")
 
 def fetch_latest_ai_trends():
     params = {
-        "q": "latest AI trends 2025",
+        "q": "latest AI trends today",
         "api_key": SERP_API_KEY,
         "num": 5
     }
