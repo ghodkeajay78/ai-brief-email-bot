@@ -1,7 +1,6 @@
 import os
-import openai
-import smtplib
 import requests
+import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
@@ -9,7 +8,7 @@ from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 SERP_API_KEY = os.getenv("SERP_API_KEY")
 EMAIL = os.getenv("EMAIL")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
@@ -53,7 +52,7 @@ Now write the full newsletter in clean HTML format (no markdown, no placeholder 
 - 🧪 Include 1 research paper or capability with a brief summary and how it can be used
 - 🧵 Share 1 cool thing developers are building with AI (e.g., open source project or unique use)
 - 📬 End with 2–3 short news bites and a subscription link (Google Form)
-- Include section headers using `<h2>` and style it like a modern, readable newsletter
+- Include section headers using <h2> and style it like a modern, readable newsletter
 - Use light background, readable fonts, and clean layout with emojis for each section
 
 Start with a full-width AI-themed lightweight banner image at the top (link to Unsplash or similar).
@@ -64,13 +63,26 @@ def get_ai_brief():
     ai_trends_html = fetch_latest_ai_trends()
     prompt = generate_prompt(ai_trends_html)
 
-    client = openai.OpenAI()
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.5
-    )
-    return response.choices[0].message.content
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = {
+        "contents": [
+            {
+                "parts": [{"text": prompt}]
+            }
+        ]
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    response.raise_for_status()
+    response_json = response.json()
+
+    try:
+        return response_json['candidates'][0]['content']['parts'][0]['text']
+    except (KeyError, IndexError):
+        return "Failed to get valid content from Gemini."
 
 def send_email(content):
     msg = MIMEMultipart("alternative")
@@ -89,4 +101,4 @@ def send_email(content):
 if __name__ == "__main__":
     content = get_ai_brief()
     send_email(content)
-    print("✅ The AI Brief with SerpAPI trends sent!")
+    print("✅ The AI Brief with Gemini trends sent!")
